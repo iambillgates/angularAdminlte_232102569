@@ -36,7 +36,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -45,20 +45,26 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active"  class="nav-link {{ moduleName == 'dashboard' ? 'active' : ''}}">
-                  <i class="far fa-circle nav-icon"></i>
+                <a [routerLink]="['/dashboard']" 
+                  routerLinkActive="router-link-active"
+                  class="nav-link {{ moduleName == 'dashboard' ? 'active' : ''}}"
+                  (click)="onSidebarLinkClick()">  <i class="far fa-circle nav-icon"></i>
                   <p>Dashboard v1</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a [routerLink]="['/dashboard2']" routerLinkActive="router-link-active" class="nav-link {{ moduleName == 'dashboard2' ? 'active' : ''}}">
-                  <i class="far fa-circle nav-icon"></i>
+                <a [routerLink]="['/dashboard2']" 
+                  routerLinkActive="router-link-active" 
+                  class="nav-link {{ moduleName == 'dashboard2' ? 'active' : ''}}"
+                  (click)="onSidebarLinkClick()">  <i class="far fa-circle nav-icon"></i>
                   <p>Dashboard v2</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./index3.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                 <a [routerLink]="['/dashboard3']" 
+                  routerLinkActive="router-link-active"
+                  class="nav-link {{ moduleName == 'dashboard3' ? 'active' : ''}}"
+                  (click)="onSidebarLinkClick()">  <i class="far fa-circle nav-icon"></i>
                   <p>Dashboard v3</p>
                 </a>
               </li>
