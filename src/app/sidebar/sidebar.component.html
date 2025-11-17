@@ -14,7 +14,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">Dwi Akbar</a>
         </div>
       </div>
 
@@ -35,8 +35,8 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
+          <li class="nav-item has-treeview {{ (moduleName == 'dashboard' || moduleName == 'dashboard2' || moduleName == 'dashboard3' ) && 'menu-open' }}">
+            <a href="#" class="nav-link {{ (moduleName == 'dashboard' || moduleName == 'dashboard2' || moduleName == 'dashboard3' ) && 'active' }}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -71,12 +71,11 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Widgets
-                <span class="right badge badge-danger">New</span>
-              </p>
+            <a [routerLink]="['/mahasiswa']" 
+                  routerLinkActive="router-link-active"
+                  class="nav-link {{ moduleName == 'mahasiswa' ? 'active' : ''}}"
+                  (click)="onSidebarLinkClick()">  <i class="fas fa-graduation-cap"></i>
+                  <p>Mahasiswa</p>
             </a>
           </li>
           <li class="nav-item">

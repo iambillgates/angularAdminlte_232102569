@@ -27,10 +27,16 @@
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
   <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- DataTables (FIXED: Spasi dihapus) -->
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 </head>
 <body class="hold-transition">
   <app-root></app-root>
-  <!-- jQuery -->
+
+  <!-- JQuery (FIXED: Dipindahkan ke atas) -->
+  <!-- jQuery harus dimuat SEBELUM semua script lain yang bergantung padanya -->
   <script src="plugins/jquery/jquery.min.js"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -38,8 +44,16 @@
   <script>
     $.widget.bridge('uibutton', $.ui.button)
   </script>
+
   <!-- Bootstrap 4 -->
   <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- DataTables & Plugins (FIXED: Sekarang dimuat setelah jQuery) -->
+  <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
   <!-- ChartJS -->
   <script src="plugins/chart.js/Chart.min.js"></script>
   <!-- Sparkline -->
