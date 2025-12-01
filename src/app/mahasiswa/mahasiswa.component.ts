@@ -70,4 +70,78 @@ export class MahasiswaComponent implements AfterViewInit {
       this.table1.draw(false);
     });
   }
+  showTambahModal(): void {
+    $("#tambahModal").modal();
+  }
+  postRecord(): void {
+    var alamat = $("#alamatText").val();
+    var jenisKelamin = $("#jenisKelaminSelect").val();
+    var Jp = $("#jpSelect").val();
+    var nama = $("#namaText").val();
+    var nim =$("#nimText").val();
+    var statusNikah = $("#statusNikahSelect").val();
+    var tahunMasuk = $("#tahunMasukText").val();
+    var tanggalLahir = $("#tanggalLahirText").val();
+    var tempatLahir = $("#tempatLahirText").val();
+
+    if (nim.length == 0) {
+      alert("NIM belum diisi");
+      return;
+    }
+
+    if (nama.length == 0) {
+      alert("Nama belum diisi");
+      return;
+    }
+
+    if (tempatLahir.length == 0) {
+      alert("Tempat lahir belum diisi");
+      return;
+    }
+
+    if (tanggalLahir.length == 0) {
+      alert("Tanggal lahir belum diisi");
+      return;
+    }
+
+    if (alamat.length == 0) {
+      alert("Alamat belum diisi");
+      return;
+    }
+
+    if (tahunMasuk.length == 0) {
+      alert("Tahun masuk belum diisi");
+      return;
+    }
+
+    alamat = encodeURIComponent(alamat);
+    jenisKelamin = encodeURIComponent(jenisKelamin);
+    Jp = encodeURIComponent(Jp);
+    nama = encodeURIComponent(nama);
+    nim = encodeURIComponent(nim);
+    statusNikah = encodeURIComponent(statusNikah);
+    tahunMasuk = encodeURIComponent(tahunMasuk);
+    tanggalLahir = encodeURIComponent(tanggalLahir);
+    tempatLahir = encodeURIComponent(tempatLahir);
+
+    var url = "https://stmikpontianak.cloud/011100862/tambahMahasiswa.php" +
+      "?alamat=" + alamat +
+      "&jenisKelamin=" + jenisKelamin +
+      "&jp=" + Jp +
+      "&nama=" + nama +
+      "&nim=" + nim +
+      "&statusPernikahan=" + statusNikah +
+      "&tahunMasuk=" + tahunMasuk +
+      "&tanggalLahir=" + tanggalLahir +
+      "&tempatLahir=" + tempatLahir;
+      
+    this.httpClient.get(url)
+      .subscribe((data : any) => {
+        console.log(data);
+        alert(data.status + " --> " + data.message);
+
+        this.bindMahasiswa();
+        $("#tambahModal").modal("hide");
+      });
+  }
 }
