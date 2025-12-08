@@ -79,14 +79,12 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Layout Options
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">6</span>
-              </p>
-            </a>
+           <a [routerLink]="['/forex']" 
+                  routerLinkActive="router-link-active"
+                  class="nav-link {{ moduleName == 'forex' ? 'active' : ''}}"
+                  (click)="onSidebarLinkClick()">  <i class="fas fa-money-bill-alt"></i>
+                  <p>Forex</p>
+            </a>  
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="pages/layout/top-nav.html" class="nav-link">
@@ -660,9 +658,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon far fa-circle text-warning"></i>
-              <p>Warning</p>
+            <a href="" class="nav-link" (click)="toggleTheme(); $event.preventDefault()">
+              <i class="nav-icon fas fa-adjust"></i>
+              <p>Light/Dark Mode</p>
             </a>
           </li>
           <li class="nav-item">
