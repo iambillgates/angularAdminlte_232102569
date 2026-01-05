@@ -10,6 +10,7 @@ import { otentikasiGuard } from './otentikasi.guard';
 import { LogoutComponent } from './logout/logout.component';
 import { ForexComponent } from './forex/forex.component';
 import { CuacaComponent } from './cuaca/cuaca.component';
+import { CryptoComponent } from './crypto/crypto.component';
 
 export const routes: Routes = [
     { path: "", redirectTo: "login", pathMatch: "full" },
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: "dashboard2", component: Dashboard2Component, canActivate: [otentikasiGuard] },
     { path: "dashboard3", component: Dashboard3Component, canActivate: [otentikasiGuard]},
     { path: "mahasiswa", component: MahasiswaComponent, canActivate: [otentikasiGuard] },
+    { path: "crypto", component: CryptoComponent, canActivate: [otentikasiGuard] },
     { path: "forex", component: ForexComponent, canActivate: [otentikasiGuard] },
     { path: "cuaca", component: CuacaComponent, canActivate: [otentikasiGuard] },
     { path: "login", component: LoginComponent},
