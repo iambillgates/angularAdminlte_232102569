@@ -1,0 +1,9 @@
+/* Supaya tabel tidak loncat-loncat saat angka berubah */
+table.dataTable td {
+  vertical-align: middle;
+}
+
+/* Animasi sederhana jika ingin dikembangkan */
+.price-flash {
+  transition: color 0.3s ease;
+}

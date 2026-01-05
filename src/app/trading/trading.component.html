@@ -1,0 +1,177 @@
+<div class="wrapper">
+  <app-header></app-header>
+  <app-sidebar moduleName="trading"></app-sidebar>
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Futures Simulator</h1>
+          </div>
+          <div class="col-sm-6 text-right">
+             <span class="badge badge-success p-2" style="font-size: 14px;">
+                Saldo: {{ balance | currency:'USD':'symbol':'1.2-2' }}
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          
+          <div class="col-md-4">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h3 class="card-title">Live Market</h3>
+              </div>
+              <div class="card-body p-0">
+                <table id="tableMarket" class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Pair</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Deposit Demo</h3>
+              </div>
+              <div class="card-body">
+                <div class="input-group">
+                  <input type="number" class="form-control" [(ngModel)]="inputDeposit" placeholder="Jumlah USDT">
+                  <span class="input-group-append">
+                    <button class="btn btn-warning" (click)="depositFunds()">Isi Saldo</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h3 class="card-title">Open Position</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label>Pair</label>
+                    <select class="form-control" #coinSelect>
+                      <option value="BTCUSDT">BTCUSDT</option>
+                      <option value="ETHUSDT">ETHUSDT</option>
+                      <option value="SOLUSDT">SOLUSDT</option>
+                      <option value="XRPUSDT">XRPUSDT</option>
+                      <option value="BNBUSDT">BNBUSDT</option>
+                      <option value="DOGEUSDT">DOGEUSDT</option>
+                    </select>
+                    <small class="text-muted">Current Price: {{ marketPrices[coinSelect.value] | currency:'USD' }}</small>
+                  </div>
+
+                  <div class="col-md-4 mb-3">
+                    <label>Leverage</label>
+                    <select class="form-control" [(ngModel)]="selectedLeverage">
+                      <option [ngValue]="1">1x</option>
+                      <option [ngValue]="5">5x</option>
+                      <option [ngValue]="10">10x</option>
+                      <option [ngValue]="20">20x</option>
+                      <option [ngValue]="50">50x</option>
+                      <option [ngValue]="100">100x</option>
+                      <option [ngValue]="125">125x</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4 mb-3">
+                    <label>Margin (USDT)</label>
+                    <input type="number" class="form-control" [(ngModel)]="inputMargin">
+                    <small class="text-muted">Total Size: {{ inputMargin * selectedLeverage | currency:'USD' }}</small>
+                  </div>
+                </div>
+
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <button class="btn btn-success btn-block btn-lg" 
+                            (click)="openPosition(coinSelect.value, 'LONG')">
+                      Buy / Long (Naik)
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button class="btn btn-danger btn-block btn-lg" 
+                            (click)="openPosition(coinSelect.value, 'SHORT')">
+                      Sell / Short (Turun)
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-outline card-info mt-3">
+              <div class="card-header">
+                <h3 class="card-title">Positions ({{ openPositions.length }})</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Lev</th>
+                      <th>Size</th>
+                      <th>Entry Price</th>
+                      <th>Mark Price</th>
+                      <th>Liq. Price</th>
+                      <th>Margin</th>
+                      <th>PnL (ROE%)</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let pos of openPositions; let i = index">
+                      <td class="font-weight-bold">
+                        <span [class.text-success]="pos.type==='LONG'" [class.text-danger]="pos.type==='SHORT'">
+                          {{ pos.symbol }} ({{ pos.type }})
+                        </span>
+                      </td>
+                      <td>{{ pos.leverage }}x</td>
+                      <td>{{ pos.size | currency:'USD':'symbol':'1.0-0' }}</td>
+                      <td>{{ pos.entryPrice | number:'1.2-4' }}</td>
+                      <td>{{ pos.currentPrice | number:'1.2-4' }}</td>
+                      
+                      <td class="text-danger font-weight-bold">
+                        {{ pos.liquidationPrice | number:'1.2-4' }}
+                      </td>
+                      
+                      <td>{{ pos.margin | currency:'USD' }}</td>
+                      
+                      <td [ngClass]="pos.pnl >= 0 ? 'text-success' : 'text-danger'" class="font-weight-bold">
+                        {{ pos.pnl | number:'1.2-2' }} <br>
+                        <small>({{ pos.pnlPercent | number:'1.2-2' }}%)</small>
+                      </td>
+                      
+                      <td>
+                        <button class="btn btn-sm btn-outline-dark" (click)="closePosition(i)">Close</button>
+                      </td>
+                    </tr>
+                    
+                    <tr *ngIf="openPositions.length === 0">
+                      <td colspan="9" class="text-center text-muted py-4">
+                        Belum ada posisi terbuka. Silahkan Buy/Sell diatas.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div> </div> </div>
+    </section>
+  </div>
+  <app-footer></app-footer>
+</div>

@@ -11,6 +11,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { ForexComponent } from './forex/forex.component';
 import { CuacaComponent } from './cuaca/cuaca.component';
 import { CryptoComponent } from './crypto/crypto.component';
+import { TradingComponent } from './trading/trading.component';
 
 export const routes: Routes = [
     { path: "", redirectTo: "login", pathMatch: "full" },
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: "mahasiswa", component: MahasiswaComponent, canActivate: [otentikasiGuard] },
     { path: "crypto", component: CryptoComponent, canActivate: [otentikasiGuard] },
     { path: "forex", component: ForexComponent, canActivate: [otentikasiGuard] },
+    { path: "trading", component: TradingComponent, canActivate: [otentikasiGuard] },
     { path: "cuaca", component: CuacaComponent, canActivate: [otentikasiGuard] },
     { path: "login", component: LoginComponent},
     { path: "logout", component: LogoutComponent},
