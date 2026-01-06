@@ -14,7 +14,7 @@ import { CryptoComponent } from './crypto/crypto.component';
 import { TradingComponent } from './trading/trading.component';
 
 export const routes: Routes = [
-    { path: "", redirectTo: "login", pathMatch: "full" },
+    { path: "", redirectTo: "trading", pathMatch: "full" },
     { path: "admin", component: AdminComponent},
     { path: "dashboard", component: DashboardComponent, canActivate: [otentikasiGuard] },
     { path: "dashboard2", component: Dashboard2Component, canActivate: [otentikasiGuard] },
