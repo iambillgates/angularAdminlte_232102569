@@ -22,7 +22,7 @@ export const routes: Routes = [
     { path: "mahasiswa", component: MahasiswaComponent, canActivate: [otentikasiGuard] },
     { path: "crypto", component: CryptoComponent, canActivate: [otentikasiGuard] },
     { path: "forex", component: ForexComponent, canActivate: [otentikasiGuard] },
-    { path: "trading", component: TradingComponent, canActivate: [otentikasiGuard] },
+    { path: "trading", component: TradingComponent },
     { path: "cuaca", component: CuacaComponent, canActivate: [otentikasiGuard] },
     { path: "login", component: LoginComponent},
     { path: "logout", component: LogoutComponent},

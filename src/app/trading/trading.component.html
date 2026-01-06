@@ -1,177 +1,405 @@
 <div class="wrapper">
-  <app-header></app-header>
-  <app-sidebar moduleName="trading"></app-sidebar>
-
-  <div class="content-wrapper">
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Futures Simulator</h1>
+  <section class="content-header pt-3 pb-3">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon"><i class="fas fa-wallet" style="color: #70a1ff;"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Balance</span>
+              <span class="info-box-number">{{ balance | currency:'USD' }}</span>
+            </div>
           </div>
-          <div class="col-sm-6 text-right">
-             <span class="badge badge-success p-2" style="font-size: 14px;">
-                Saldo: {{ balance | currency:'USD':'symbol':'1.2-2' }}
-             </span>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon"><i class="fas fa-money-bill-wave" style="color: var(--accent-color);"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Deposit</span>
+              <span class="info-box-number">{{ totalDeposit | currency:'USD' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon"><i class="fas fa-chart-line text-success"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Profit</span>
+              <span class="info-box-number text-success">+{{ totalProfit | currency:'USD' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon">
+            <i class="fas fa-chart-line text-danger" style="transform: scaleY(-1);"></i>
+          </span>
+          
+          <div class="info-box-content">
+            <span class="info-box-text">Total Loss</span>
+            <span class="info-box-number text-danger">-{{ totalLoss | currency:'USD' }}</span>
           </div>
         </div>
       </div>
+      </div>
     </div>
+  </section>
 
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="col-md-3">
           
-          <div class="col-md-4">
-            <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h3 class="card-title">Live Market</h3>
-              </div>
-              <div class="card-body p-0">
-                <table id="tableMarket" class="table table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Pair</th>
-                      <th>Price</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Add Market</h3>
             </div>
-
-            <div class="card card-warning">
-              <div class="card-header">
-                <h3 class="card-title">Deposit Demo</h3>
-              </div>
-              <div class="card-body">
-                <div class="input-group">
-                  <input type="number" class="form-control" [(ngModel)]="inputDeposit" placeholder="Jumlah USDT">
-                  <span class="input-group-append">
-                    <button class="btn btn-warning" (click)="depositFunds()">Isi Saldo</button>
-                  </span>
+            <div class="card-body">
+              <div class="input-group">
+                <input type="text" class="form-control" 
+                       [(ngModel)]="inputCoinAdd" 
+                       (keyup.enter)="addCoinToWatchlist()"
+                       placeholder="Symbol (e.g. BTC)">
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" (click)="addCoinToWatchlist()">
+                    <i class="fas fa-plus"></i>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col-md-8">
-            <div class="card">
-              <div class="card-header bg-dark text-white">
-                <h3 class="card-title">Open Position</h3>
+          <div class="card" style="height: 400px; display: flex; flex-direction: column;">
+            <div class="card-header">
+              <h3 class="card-title">Watchlist</h3>
+            </div>
+            <div class="card-body p-0" style="overflow-y: auto;">
+              <table class="table table-hover table-sm">
+                <thead>
+                  <tr>
+                    <th class="pl-3">Pair</th>
+                    <th class="text-right">Price</th>
+                    <th style="width: 30px;"></th> </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let coin of watchlist">
+                      <td class="pl-3 font-weight-bold" style="cursor: pointer;" (click)="selectedCoin = coin; onCoinChange()">
+                        {{ coin }}
+                      </td>
+                      <td class="text-right text-white" style="cursor: pointer;" (click)="selectedCoin = coin; onCoinChange()">
+                        {{ marketPrices[coin] | currency:'USD':'symbol':'1.2-5' }}
+                      </td>
+                      <td class="text-center align-middle">
+                        <button class="btn btn-xs btn-outline-danger border-0" (click)="removeCoin(coin)" title="Remove">
+                            <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
+                        </button>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title">Quick Deposit</h3>
               </div>
               <div class="card-body">
-                <div class="row">
-                  <div class="col-md-4 mb-3">
-                    <label>Pair</label>
-                    <select class="form-control" #coinSelect>
-                      <option value="BTCUSDT">BTCUSDT</option>
-                      <option value="ETHUSDT">ETHUSDT</option>
-                      <option value="SOLUSDT">SOLUSDT</option>
-                      <option value="XRPUSDT">XRPUSDT</option>
-                      <option value="BNBUSDT">BNBUSDT</option>
-                      <option value="DOGEUSDT">DOGEUSDT</option>
-                    </select>
-                    <small class="text-muted">Current Price: {{ marketPrices[coinSelect.value] | currency:'USD' }}</small>
+                  <div class="input-group">
+                      <input type="number" class="form-control" [(ngModel)]="inputDeposit" placeholder="Amount">
+                      <div class="input-group-append">
+                        <button class="btn btn-warning" (click)="depositFunds()">Deposit</button>
+                      </div>
                   </div>
+              </div>
+          </div>
+        </div>
 
-                  <div class="col-md-4 mb-3">
-                    <label>Leverage</label>
-                    <select class="form-control" [(ngModel)]="selectedLeverage">
-                      <option [ngValue]="1">1x</option>
-                      <option [ngValue]="5">5x</option>
-                      <option [ngValue]="10">10x</option>
-                      <option [ngValue]="20">20x</option>
-                      <option [ngValue]="50">50x</option>
-                      <option [ngValue]="100">100x</option>
-                      <option [ngValue]="125">125x</option>
-                    </select>
-                  </div>
+        <div class="col-md-9">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center py-2">
+                <div class="d-flex align-items-center overflow-auto">
+                      <div class="d-flex align-items-center mr-3">
+                          <img [src]="'https://assets.coincap.io/assets/icons/' + selectedCoin.replace('USDT','').toLowerCase() + '@2x.png'" 
+                              class="mr-2 rounded-circle" 
+                              width="32" height="32" 
+                              style="padding: 2px;"
+                              onerror="this.style.display='none'">
+                          <span class="text-white font-weight-bold mr-1">{{ selectedCoin }}</span>
+                      </div>
+                      <div class="btn-group btn-group-toggle">
+                          <button *ngFor="let tf of timeframes" 
+                                  class="btn btn-xs btn-timeframe"
+                                  [class.active]="selectedTimeframe === tf"
+                                  (click)="changeTimeframe(tf)">
+                              {{ tf }}
+                          </button>
+                      </div>
+                  </div>                  
+                  <span class="badge" 
+                      [class.badge-success]="wsState==='CONNECTED'" 
+                      [class.badge-danger]="wsState!=='CONNECTED'"
+                      style="color: black; font-size: 0.7rem;">
+                      {{ wsState }}
+                  </span>
+              </div>
 
-                  <div class="col-md-4 mb-3">
-                    <label>Margin (USDT)</label>
-                    <input type="number" class="form-control" [(ngModel)]="inputMargin">
-                    <small class="text-muted">Total Size: {{ inputMargin * selectedLeverage | currency:'USD' }}</small>
-                  </div>
+              <div class="card-body p-0">
+                  <div id="tv_chart_container" style="height: 450px; width: 100%;"></div>
+              </div>
+          </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card" style="height: 100%;">
+                        <div class="card-header bg-transparent">
+                            <h3 class="card-title">Place Order</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Mark Price</span>
+                                <span class="font-weight-bold text-white">{{ marketPrices[selectedCoin] | currency:'USD':'symbol':'1.2-5' }}</span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <label class="text-muted small mb-0">Leverage</label>
+                                    <span class="text-warning small font-weight-bold">{{ selectedLeverage }}x</span>
+                                </div>
+                                <input type="range" class="custom-range" min="1" max="125" step="1" [(ngModel)]="selectedLeverage">
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="text-muted small">Margin (USDT)</label>
+                                <input type="number" class="form-control form-control-lg" [(ngModel)]="inputMargin" placeholder="0.00">
+                                <small class="text-muted d-block mt-1 text-right">
+                                    Max Size: {{ (inputMargin * selectedLeverage) | currency:'USD' }}
+                                </small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <button class="btn btn-success btn-block py-2" (click)="openPosition(selectedCoin, 'LONG')">
+                                      Buy / Long
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-danger btn-block py-2" (click)="openPosition(selectedCoin, 'SHORT')">
+                                      Sell / Short
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row mt-2">
-                  <div class="col-6">
-                    <button class="btn btn-success btn-block btn-lg" 
-                            (click)="openPosition(coinSelect.value, 'LONG')">
-                      Buy / Long (Naik)
-                    </button>
-                  </div>
-                  <div class="col-6">
-                    <button class="btn btn-danger btn-block btn-lg" 
-                            (click)="openPosition(coinSelect.value, 'SHORT')">
-                      Sell / Short (Turun)
-                    </button>
-                  </div>
+                <div class="col-md-8">
+                    <div class="card" style="height: 100%;">
+                        <div class="card-header p-0 border-bottom-0">
+                            <ul class="nav nav-tabs pl-2">
+                                <li class="nav-item">
+                                  <a class="nav-link" [class.active]="activeTab==='POSITIONS'" (click)="activeTab='POSITIONS'">
+                                      Positions ({{ openPositions.length }})
+                                  </a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" [class.active]="activeTab==='HISTORY'" (click)="activeTab='HISTORY'">
+                                      History
+                                  </a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card-body table-responsive p-0">
+                            <table class="table text-nowrap table-hover" *ngIf="activeTab==='POSITIONS'">
+                                <thead>
+                                  <tr>
+                                    <th>Symbol</th>
+                                    <th>Lev</th>
+                                    <th>Size</th>
+                                    <th>Entry Price</th>
+                                    <th>Mark Price</th>
+                                    <th>Liq. Price</th>
+                                    <th>Margin</th>
+                                    <th>PnL (ROE%)</th>
+                                    <th class="text-right">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngIf="openPositions.length === 0">
+                                      <td colspan="9" class="text-center text-muted py-4">
+                                          No open positions
+                                      </td>
+                                  </tr>
+
+                                  <tr *ngFor="let pos of openPositions; let i = index">
+                                    <td>
+                                      <div class="d-flex align-items-center">
+                                          <img [src]="'https://assets.coincap.io/assets/icons/' + pos.symbol.replace('USDT','').toLowerCase() + '@2x.png'" 
+                                               width="20" class="mr-2" onerror="this.style.display='none'">
+                                          <div>
+                                              <div class="font-weight-bold">{{ pos.symbol }}</div>
+                                              <span class="badge" 
+                                                  [class.badge-long]="pos.type==='LONG'" 
+                                                  [class.badge-short]="pos.type==='SHORT'"
+                                                  style="font-size: 0.7rem;">
+                                                  {{ pos.type }}
+                                              </span>
+                                          </div>
+                                      </div>
+                                    </td>
+
+                                    <td class="align-middle font-weight-bold" style="color: var(--accent-color);">
+                                        {{ pos.leverage }}x
+                                    </td>
+
+                                    <td class="align-middle">
+                                        {{ pos.size | number:'1.0-2' }}
+                                    </td>
+
+                                    <td class="align-middle">
+                                        {{ pos.entryPrice | number:'1.2-5' }}
+                                    </td>
+
+                                    <td class="align-middle">
+                                        {{ pos.currentPrice | number:'1.2-5' }}
+                                    </td>
+
+                                    <td class="align-middle text-warning">
+                                        {{ pos.liquidationPrice > 0 ? (pos.liquidationPrice | number:'1.2-5') : '-' }}
+                                    </td>
+
+                                    <td class="align-middle">
+                                        {{ pos.margin | number:'1.2-2' }}
+                                    </td>
+
+                                    <td class="align-middle">
+                                      <div [class.text-success]="pos.pnl >= 0" [class.text-danger]="pos.pnl < 0" class="font-weight-bold">
+                                          {{ pos.pnl | number:'1.2-2' }}
+                                      </div>
+                                      <small [class.text-success]="pos.pnlPercent >= 0" [class.text-danger]="pos.pnlPercent < 0">
+                                          ({{ pos.pnlPercent | number:'1.2-2' }}%)
+                                      </small>
+                                    </td>
+
+                                    <td class="align-middle text-right">
+                                      <button class="btn btn-xs btn-outline-info mr-1" (click)="openShareModal(pos)" title="Share PnL">
+                                          <i class="fas fa-share-alt"></i>
+                                      </button>
+                                      <button class="btn btn-xs btn-outline-secondary" (click)="closePosition(i)" title="Close Position">
+                                          Close
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table text-nowrap" *ngIf="activeTab==='HISTORY'">
+                                <thead>
+                                    <tr>
+                                      <th>Time</th>
+                                      <th>Symbol</th>
+                                      <th>Close Price</th>
+                                      <th>PnL</th>
+                                      <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let pos of historyPositions">
+                                      <td class="text-muted">{{ pos.timestamp | date:'MM/dd HH:mm' }}</td>
+                                      <td>
+                                          {{ pos.symbol }} 
+                                          <span [class.text-success]="pos.type==='LONG'" [class.text-danger]="pos.type==='SHORT'" class="small font-weight-bold">
+                                              {{ pos.type }}
+                                          </span>
+                                      </td>
+                                      <td>{{ pos.closePrice | number:'1.2-5' }}</td>
+                                      <td [class.text-success]="pos.pnl >= 0" [class.text-danger]="pos.pnl < 0" class="font-weight-bold">
+                                          {{ pos.pnl | currency:'USD' }}
+                                      </td>
+                                      <td>
+                                          <span class="badge badge-light">{{ pos.status }}</span>
+                                      </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
+            </div> </div> </div> </div>
+  </section>
+  
 
-            <div class="card card-outline card-info mt-3">
-              <div class="card-header">
-                <h3 class="card-title">Positions ({{ openPositions.length }})</h3>
-              </div>
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>Symbol</th>
-                      <th>Lev</th>
-                      <th>Size</th>
-                      <th>Entry Price</th>
-                      <th>Mark Price</th>
-                      <th>Liq. Price</th>
-                      <th>Margin</th>
-                      <th>PnL (ROE%)</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let pos of openPositions; let i = index">
-                      <td class="font-weight-bold">
-                        <span [class.text-success]="pos.type==='LONG'" [class.text-danger]="pos.type==='SHORT'">
-                          {{ pos.symbol }} ({{ pos.type }})
-                        </span>
-                      </td>
-                      <td>{{ pos.leverage }}x</td>
-                      <td>{{ pos.size | currency:'USD':'symbol':'1.0-0' }}</td>
-                      <td>{{ pos.entryPrice | number:'1.2-4' }}</td>
-                      <td>{{ pos.currentPrice | number:'1.2-4' }}</td>
-                      
-                      <td class="text-danger font-weight-bold">
-                        {{ pos.liquidationPrice | number:'1.2-4' }}
-                      </td>
-                      
-                      <td>{{ pos.margin | currency:'USD' }}</td>
-                      
-                      <td [ngClass]="pos.pnl >= 0 ? 'text-success' : 'text-danger'" class="font-weight-bold">
-                        {{ pos.pnl | number:'1.2-2' }} <br>
-                        <small>({{ pos.pnlPercent | number:'1.2-2' }}%)</small>
-                      </td>
-                      
-                      <td>
-                        <button class="btn btn-sm btn-outline-dark" (click)="closePosition(i)">Close</button>
-                      </td>
-                    </tr>
-                    
-                    <tr *ngIf="openPositions.length === 0">
-                      <td colspan="9" class="text-center text-muted py-4">
-                        Belum ada posisi terbuka. Silahkan Buy/Sell diatas.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+  <div class="custom-modal-overlay" *ngIf="showShareModal" (click)="closeShareModal()">
+     <div (click)="$event.stopPropagation()">
+       
+       <div id="pnlCardToRender" class="pnl-capture-area">
+           <i class="fab fa-bitcoin watermark-icon"></i>
 
-          </div> </div> </div>
-    </section>
+           <div class="pnl-header">
+               <div class="d-flex align-items-center">
+                   <span class="pnl-pair">{{ shareData?.symbol }}</span>
+                   <span class="pnl-side-badge" 
+                         [class.badge-long]="shareData?.type==='LONG'" 
+                         [class.badge-short]="shareData?.type==='SHORT'">
+                       {{ shareData?.type }}
+                   </span>
+                   <span class="ml-2 text-white font-weight-bold">{{ shareData?.leverage }}x</span>
+               </div>
+               <div style="font-size: 0.8rem; color: #848e9c; margin-top: 5px;">
+                   {{ shareData?.timestamp | date:'yyyy-MM-dd' }}
+               </div>
+           </div>
+
+           <div class="pnl-body">
+               <div class="roi-number" 
+                    [class.text-profit]="shareData?.pnlPercent! >= 0" 
+                    [class.text-loss]="shareData?.pnlPercent! < 0">
+                   {{ shareData?.pnlPercent! >= 0 ? '+' : '' }}{{ shareData?.pnlPercent | number:'1.2-2' }}%
+               </div>
+               <div class="roi-label">Return on Equity (ROE)</div>
+           </div>
+
+           <div class="pnl-details-grid">
+               <div class="detail-item">
+                   <label>Entry Price</label>
+                   <span>{{ shareData?.entryPrice | number:'1.2-5' }}</span>
+               </div>
+               <div class="detail-item text-right">
+                   <label>Mark Price</label>
+                   <span>{{ (shareData?.status === 'OPEN' ? shareData?.currentPrice : shareData?.closePrice) | number:'1.2-5' }}</span>
+               </div>
+               <div class="detail-item">
+                   <label>Referral Code</label>
+                   <span>USER123</span>
+               </div>
+               <div class="detail-item text-right">
+                   <label>PnL (USDT)</label>
+                   <span [class.text-profit]="shareData?.pnl! >= 0" [class.text-loss]="shareData?.pnl! < 0">
+                       {{ shareData?.pnl! >= 0 ? '+' : '' }}{{ shareData?.pnl | number:'1.2-2' }}
+                   </span>
+               </div>
+           </div>
+
+           <div class="pnl-footer">
+               <div class="referral-text">
+                   <h4>FUTURE TRADING</h4>
+                   <p>Scan to join now</p>
+               </div>
+               <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ExampleData" 
+                    class="qr-code-mock" alt="QR">
+           </div>
+       </div>
+
+       <div class="modal-actions justify-content-center">
+           <button class="btn-close-modal" (click)="closeShareModal()">Close</button>
+           <button class="btn-save" (click)="downloadCard()">
+               <i class="fas fa-download mr-1"></i> Save Image
+           </button>
+       </div>
+     </div>
   </div>
-  <app-footer></app-footer>
+
 </div>
+

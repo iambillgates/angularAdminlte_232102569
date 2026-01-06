@@ -90,7 +90,7 @@
             <a [routerLink]="['/crypto']" 
                   routerLinkActive="router-link-active"
                   class="nav-link {{ moduleName == 'crypto' ? 'active' : ''}}"
-                  (click)="onSidebarLinkClick()">  <i class="nav-icon fas fa-cloud-rain"></i>
+                  (click)="onSidebarLinkClick()">  <i class="nav-icon fab fa-bitcoin"></i>
                   <p>Crypto</p>
             </a>
           </li>
@@ -98,17 +98,19 @@
             <a [routerLink]="['/trading']" 
                   routerLinkActive="router-link-active"
                   class="nav-link {{ moduleName == 'trading' ? 'active' : ''}}"
-                  (click)="onSidebarLinkClick()">  <i class="nav-icon fas fa-cloud-rain"></i>
+                  (click)="onSidebarLinkClick()">  <i class="nav-icon fas fa-chart-line"></i>
                   <p>Trading</p>
             </a>
           </li>
           <li class="nav-item">
-           <a [routerLink]="['/forex']" 
+            <a [routerLink]="['/forex']" 
                   routerLinkActive="router-link-active"
                   class="nav-link {{ moduleName == 'forex' ? 'active' : ''}}"
                   (click)="onSidebarLinkClick()">  <i class="fas fa-money-bill-alt"></i>
                   <p>Forex</p>
-            </a>  
+            </a>
+          </li>
+          <li class="nav-item">
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="pages/layout/top-nav.html" class="nav-link">
