@@ -54,6 +54,7 @@ export class CuacaComponent implements AfterViewInit {
         },
       ],
     });
+    this.getData("Pontianak");
   }
 
   getData(city: string): void {
